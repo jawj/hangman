@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Hangman</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+  <style>
+    body {
+      padding: 30px 10%;
+      font: 20px/1.3 "Indie Flower", cursive;
+    }
+
+    .letter,
+    .alfie {
+      font-size: 30px;
+      display: inline-block;
+      border-bottom: 2px black solid;
+      width: 1.5em;
+      text-align: center;
+      margin: 4px;
+    }
+
+    .alphabet {
+      margin-top: 30px;
+    }
+
+    .alfie {
+      border: 1px solid black;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .correct {
+      background: #0c0;
+      color: white;
+    }
+
+    .incorrect {
+      background: #c00;
+      color: white;
+    }
+
+    svg {
+      margin-bottom: 20px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Hangman</h1>
+  <p>Hello! This is online hangman (a bit simpler than the classic pen and paper) and we hope you will enjoy!</p>
+  <div id="game"></div>
+</body>
+<script src="https://unpkg.com/mithril/mithril.js"></script>
+<script>
+  let alphabet = "abcdefghijklmnopqrstuvwxyz".split("")
+
+  let words = "topiary arcade euphoric enthusiastic babies doughnut phoenix dragon griffin submission giraffe electronics radio devil marshmallow puppet raspberry cream freakish moronic idiot stupid watermelon decimals explorer personal malicious rejected greedy laptop computer headphones television automatic encyclopaedia descend ascend fuming sunlight health hospital injury bandages history mirror glaciers freezing coaxing beckoning classic original apocalyptic insane driven machine vehicle transporter location canyon mountain vertigo phobia arachniphobia programming design dislocate anxiety hopeful belief secondary senior education languages understanding prejudice metallic accomplish achieve miraculous disappointment searching photograph incomplete annoyed permission denied radical uncertainty uncalculated calculated melodramatic".split(" ")
+  
+  let word = words[Math.floor(Math.random() * words.length)]
+  let guesses = ""
+  let game = document.getElementById("game")
+
+  m.mount(game, {
+    view: function () {
+      let letters = word.split("")
+
+      return m('div',
+        m('svg', { viewBox: "0 0 100 100", width: 200, height: 200 },
+          m('line', { x1: 5, y1: 95, x2: 95, y2: 95, stroke: 'black' })
+        ),
+
+        letters.map(letter => m(
+          'div.letter',
+          guesses.includes(letter) ? letter : m.trust('&nbsp;'))
+        ),
+
+        m('div.alphabet',
+          alphabet.map(alfie => m(
+            'div.alfie' + (guesses.includes(alfie) ? (word.includes(alfie) ? '.correct' : '.incorrect') : '.unguessed'),
+            { onclick: () => guesses += alfie },
+            alfie
+          ))
+        )
+      )
+    }
+  })
+
+</script>
+</html>

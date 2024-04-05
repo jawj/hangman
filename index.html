@@ -59,19 +59,35 @@
 <script>
   let alphabet = "abcdefghijklmnopqrstuvwxyz".split("")
 
-  let words = "topiary arcade euphoric enthusiastic babies doughnut phoenix dragon griffin submission giraffe electronics radio devil marshmallow puppet raspberry cream freakish moronic idiot stupid watermelon decimals explorer personal malicious rejected greedy laptop computer headphones television automatic encyclopaedia descend ascend fuming sunlight health hospital injury bandages history mirror glaciers freezing coaxing beckoning classic original apocalyptic insane driven machine vehicle transporter location canyon mountain vertigo phobia arachniphobia programming design dislocate anxiety hopeful belief secondary senior education languages understanding prejudice metallic accomplish achieve miraculous disappointment searching photograph incomplete annoyed permission denied radical uncertainty uncalculated calculated melodramatic".split(" ")
-  
+  let words = "topiary arcade euphoric enthusiastic babies doughnut phoenix dragon griffin submission giraffe electronics radio devil marshmallow puppet raspberry cream freakish moronic idiot stupid watermelon decimals explorer personal malicious rejected greedy laptop computer headphones television automatic encyclopaedia descend ascend fuming sunlight health hospital injury bandages history mirror glaciers freezing coaxing beckoning classic original apocalyptic insane driven machine vehicle transporter location canyon mountain vertigo phobia arachnophobia programming design dislocate anxiety hopeful belief secondary senior education languages understanding prejudice metallic accomplish achieve miraculous disappointment searching photograph incomplete annoyed permission denied radical uncertainty uncalculated calculated melodramatic".split(" ")
+
   let word = words[Math.floor(Math.random() * words.length)]
   let guesses = ""
   let game = document.getElementById("game")
 
+  let dark = "#000"
+  let light = "transparent"
+
   m.mount(game, {
     view: function () {
       let letters = word.split("")
+      let wrongs = guesses.split("").filter(guess => !word.includes(guess)).length
+      let i = 0
 
       return m('div',
-        m('svg', { viewBox: "0 0 100 100", width: 200, height: 200 },
-          m('line', { x1: 5, y1: 95, x2: 95, y2: 95, stroke: 'black' })
+        m('svg', { viewBox: "0 0 120 130", width: 200, height: 200 },
+          m('line', { x1: 10, y1: 120, x2: 110, y2: 120, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 40, y1: 120, x2: 40, y2: 10, stroke: wrongs > i++ ? dark : light}),
+          m('line', { x1: 40, y1: 10, x2: 90, y2: 10, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 20, y1: 120, x2: 40, y2: 100, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 60, y1: 120, x2: 40, y2: 100, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 90, y1: 10, x2: 90, y2: 20, stroke: wrongs > i++ ? dark : light }),
+          m('ellipse', { cx: 90, cy: 30, rx: 10, ry: 10, fill: 'none', stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 90, y1: 40, x2: 90, y2: 70, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 90, y1: 50, x2: 110, y2: 30, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 90, y1: 50, x2: 70, y2: 30, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 90, y1: 70, x2: 110, y2: 90, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 90, y1: 70, x2: 70, y2: 90, stroke: wrongs > i++ ? dark : light }),
         ),
 
         letters.map(letter => m(
@@ -91,4 +107,5 @@
   })
 
 </script>
+
 </html>

@@ -33,14 +33,28 @@
       cursor: pointer;
     }
 
-    .correct {
+    .correct,
+    .winner span {
       background: #0c0;
       color: white;
     }
 
-    .incorrect {
+    .incorrect,
+    .loser span {
       background: #c00;
       color: white;
+    }
+
+    .correct,
+    .incorrect {
+      cursor: default;
+    }
+
+    .winner span,
+    .loser span {
+      display: inline-block;
+      padding: 0 10px;
+      font-weight: bold;
     }
 
     svg {
@@ -58,50 +72,64 @@
 <script src="https://unpkg.com/mithril/mithril.js"></script>
 <script>
   let alphabet = "abcdefghijklmnopqrstuvwxyz".split("")
-
-  let words = "topiary arcade euphoric enthusiastic babies doughnut phoenix dragon griffin submission giraffe electronics radio devil marshmallow puppet raspberry cream freakish moronic idiot stupid watermelon decimals explorer personal malicious rejected greedy laptop computer headphones television automatic encyclopaedia descend ascend fuming sunlight health hospital injury bandages history mirror glaciers freezing coaxing beckoning classic original apocalyptic insane driven machine vehicle transporter location canyon mountain vertigo phobia arachnophobia programming design dislocate anxiety hopeful belief secondary senior education languages understanding prejudice metallic accomplish achieve miraculous disappointment searching photograph incomplete annoyed permission denied radical uncertainty uncalculated calculated melodramatic".split(" ")
-
-  let word = words[Math.floor(Math.random() * words.length)]
-  let guesses = ""
+  let words = "topiary arcade euphoric enthusiastic babies doughnut phoenix dragon griffin submission giraffe electronics radio devil marshmallow puppet raspberry cream freakish moronic idiot stupid watermelon decimals explorer personal malicious rejected greedy laptop computer headphones television automatic encyclopaedia descend ascend fuming sunlight health hospital injury bandages history mirror glaciers freezing coaxing beckoning classic original apocalyptic insane driven machine vehicle transporter location canyon mountain vertigo phobia arachnophobia programming design dislocate anxiety hopeful belief secondary senior education languages understanding prejudice metallic accomplish achieve miraculous disappointment searching photograph incomplete annoyed permission denied radical uncertainty uncalculated calculated melodramatic delete exclusion biome microscopic showing abduction quizzical wriggle inspired terrific gaggle wizened satisfactory zenith squadron manatee hibernation helix corrupt christmas democracy controversy paperwork laboratory rhythm ostentatious".split(" ")
   let game = document.getElementById("game")
-
   let dark = "#000"
   let light = "transparent"
+
+  let word, guesses;
+  function start() {
+    word = words[Math.floor(Math.random() * words.length)]
+    guesses = ""
+  }
+  start();
 
   m.mount(game, {
     view: function () {
       let letters = word.split("")
       let wrongs = guesses.split("").filter(guess => !word.includes(guess)).length
-      let i = 0
+      let lost = wrongs > 12
+      let won = word.split("").filter(letter => !guesses.includes(letter)).length == 0
 
       return m('div',
         m('svg', { viewBox: "0 0 120 130", width: 200, height: 200 },
-          m('line', { x1: 10, y1: 120, x2: 110, y2: 120, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 40, y1: 120, x2: 40, y2: 10, stroke: wrongs > i++ ? dark : light}),
-          m('line', { x1: 40, y1: 10, x2: 90, y2: 10, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 20, y1: 120, x2: 40, y2: 100, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 60, y1: 120, x2: 40, y2: 100, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 90, y1: 10, x2: 90, y2: 20, stroke: wrongs > i++ ? dark : light }),
-          m('ellipse', { cx: 90, cy: 30, rx: 10, ry: 10, fill: 'none', stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 90, y1: 40, x2: 90, y2: 70, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 90, y1: 50, x2: 110, y2: 30, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 90, y1: 50, x2: 70, y2: 30, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 90, y1: 70, x2: 110, y2: 90, stroke: wrongs > i++ ? dark : light }),
-          m('line', { x1: 90, y1: 70, x2: 70, y2: 90, stroke: wrongs > i++ ? dark : light }),
+          m('line', { x1: 10, y1: 120, x2: 110, y2: 120, stroke: wrongs > 0 ? dark : light }),
+          m('line', { x1: 40, y1: 120, x2: 40, y2: 10, stroke: wrongs > 1 ? dark : light }),
+          m('line', { x1: 40, y1: 10, x2: 90, y2: 10, stroke: wrongs > 2 ? dark : light }),
+          m('line', { x1: 20, y1: 120, x2: 40, y2: 100, stroke: wrongs > 3 ? dark : light }),
+          m('line', { x1: 60, y1: 120, x2: 40, y2: 100, stroke: wrongs > 4 ? dark : light }),
+          m('line', { x1: 40, y1: 30, x2: 60, y2: 10, stroke: wrongs > 5 ? dark : light }),
+          m('line', { x1: 90, y1: 10, x2: 90, y2: 20, stroke: wrongs > 6 ? dark : light }),
+          m('ellipse', { cx: 90, cy: 30, rx: 10, ry: 10, fill: 'none', stroke: wrongs > 7 ? dark : light }),
+          m('line', { x1: 90, y1: 40, x2: 90, y2: 70, stroke: wrongs > 8 ? dark : light }),
+          m('line', { x1: 90, y1: 50, x2: 110, y2: 30, stroke: wrongs > 9 ? dark : light }),
+          m('line', { x1: 90, y1: 50, x2: 70, y2: 30, stroke: wrongs > 10 ? dark : light }),
+          m('line', { x1: 90, y1: 70, x2: 110, y2: 90, stroke: wrongs > 11 ? dark : light }),
+          m('line', { x1: 90, y1: 70, x2: 70, y2: 90, stroke: wrongs > 12 ? dark : light }),
         ),
+
+        lost && m('p.loser', m('span', 'Bad luck: you lose!')),
+        won && m('p.winner', m('span', 'Yay: you won. WORDMASTER.')),
+        (lost || won) && m('p', m('button', { onclick: start }, 'Start again')),
 
         letters.map(letter => m(
           'div.letter',
-          guesses.includes(letter) ? letter : m.trust('&nbsp;'))
+          lost || guesses.includes(letter) ? letter : m.trust('&nbsp;'))
         ),
 
         m('div.alphabet',
           alphabet.map(alfie => m(
             'div.alfie' + (guesses.includes(alfie) ? (word.includes(alfie) ? '.correct' : '.incorrect') : '.unguessed'),
-            { onclick: () => guesses += alfie },
+            {
+              onclick: () => {
+                if (!won && !lost && !guesses.includes(alfie)) guesses += alfie
+              }
+            },
             alfie
           ))
-        )
+        ),
+
+
       )
     }
   })
